@@ -1,0 +1,85 @@
+// Iterative Queue based C program to do level order traversal
+// of Binary Tree
+#include <stdio.h>
+#include <stdlib.h>
+
+
+/* A binary tree node has data, pointer to left child
+and a pointer to right child */
+struct node
+{
+	int data;
+	struct node* left;
+	struct node* right;
+};
+
+/* Helper function that allocates a new node with the
+given data and NULL left and right pointers. */
+struct node* newNode(int data)
+{
+	struct node* node = (struct node*)
+						malloc(sizeof(struct node));
+	node->data = data;
+	node->left = NULL;
+	node->right = NULL;
+
+	return(node);
+}
+
+//queue
+struct queue{
+    struct node *node[500];
+    int front;
+    int rear;
+};
+
+//creating a queue
+struct queue* creatQueue(){
+    struct queue * queue = (struct queue *) malloc(sizeof(struct queue));
+    queue->front = 0;
+    queue ->rear =0;
+    return queue;
+}
+
+//enqueue
+void enqueue(struct queue* Q,struct node* node){
+    Q->node[Q->rear] =  node;
+    Q->rear++;
+}
+
+//dequeue
+struct node* dequeue(struct queue*Q){
+    Q->front++;
+    return Q->node[Q->front-1];
+}
+
+//printLevelOrder
+
+void printLevelOrder(struct node* node)
+{
+    if(node==NULL)
+        return;
+    struct queue* Q = creatQueue();
+    enqueue(Q,node);
+    while(node!=NULL){
+        printf("%d\t",dequeue(Q)->data);
+        enqueue(Q,node->left);
+        enqueue(Q,node->right);
+        node = Q->node[Q->front];
+    }
+    
+}
+/* Driver program to test above functions*/
+int main()
+{
+	struct node *root = newNode(1);
+	root->left	 = newNode(2);
+	root->right	 = newNode(3);
+	root->left->left  = newNode(4);
+    root->left->right = newNode(5);
+
+	printf("Level Order traversal of binary tree is \n");
+	printLevelOrder(root);
+
+	return 0;
+}
